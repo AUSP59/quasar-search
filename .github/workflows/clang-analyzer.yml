@@ -1,0 +1,24 @@
+name: clang-analyzer
+true:
+- push
+- pull_request
+jobs:
+  analyze:
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install clang
+      run: sudo apt-get update && sudo apt-get install -y clang
+    - name: Static analysis
+      run: 'scan-build -o scan-report cmake -S . -B build
+
+        scan-build -o scan-report cmake --build build -j || true
+
+        '
+    - uses: actions/upload-artifact@v4
+      with:
+        name: scan-build-report
+        path: scan-report
+'on':
+- workflow_dispatch

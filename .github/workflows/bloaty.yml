@@ -1,0 +1,29 @@
+name: bloaty
+true:
+- push
+- pull_request
+jobs:
+  report:
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install bloaty
+      run: sudo apt-get update && sudo apt-get install -y bloaty || true
+    - name: Build Release
+      run: 'cmake -S . -B build -D CMAKE_BUILD_TYPE=Release
+
+        cmake --build build -j || true
+
+        '
+    - name: Bloaty report
+      run: "if command -v bloaty >/dev/null && [ -f build/apps/quasar-grep ]; then\n\
+        \  bloaty -d compileunits -n 20 build/apps/quasar-grep | tee bloaty.txt\n\
+        fi\n"
+    - uses: actions/upload-artifact@v4
+      with:
+        name: bloaty-report
+        path: bloaty.txt
+        if-no-files-found: ignore
+'on':
+- workflow_dispatch

@@ -1,0 +1,23 @@
+name: sbom
+true:
+- push
+- pull_request
+- workflow_dispatch
+jobs:
+  syft-sbom:
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Generate SBOM
+      uses: anchore/sbom-action@v0
+      with:
+        path: .
+        format: spdx-json
+        output-file: sbom.spdx.json
+    - uses: actions/upload-artifact@v4
+      with:
+        name: sbom
+        path: sbom.spdx.json
+'on':
+- workflow_dispatch

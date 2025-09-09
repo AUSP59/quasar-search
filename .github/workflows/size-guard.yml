@@ -1,0 +1,25 @@
+name: size-guard
+true:
+- push
+- pull_request
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  size:
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Configure/Build (Release)
+      run: 'cmake -S . -B build -D CMAKE_BUILD_TYPE=Release
+
+        cmake --build build -j
+
+        '
+    - name: Enforce size budget (opt-in threshold via repo var MAX_SIZE_KB)
+      env:
+        MAX_SIZE_KB: ${{ vars.MAX_SIZE_KB }}
+      run: bash scripts/ci/size_guard.sh build/apps/quasar-grep
+'on':
+- workflow_dispatch

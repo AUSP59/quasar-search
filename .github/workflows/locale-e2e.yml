@@ -1,0 +1,34 @@
+name: locale-e2e
+true:
+- push
+- pull_request
+jobs:
+  e2e-locales:
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        locale:
+        - C
+        - en_US.UTF-8
+        - es_MX.UTF-8
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup locales
+      run: 'sudo apt-get update && sudo apt-get install -y locales
+
+        sudo locale-gen en_US.UTF-8 es_MX.UTF-8 || true
+
+        '
+    - name: Build
+      run: 'cmake -S . -B build -D CMAKE_BUILD_TYPE=Release -D QUASAR_ENABLE_TESTS=ON
+
+        cmake --build build -j
+
+        '
+    - name: Run E2E under locale
+      env:
+        LC_ALL: ${{ matrix.locale }}
+      run: bash tests/e2e_grep.sh build/apps/quasar-grep
+'on':
+- workflow_dispatch

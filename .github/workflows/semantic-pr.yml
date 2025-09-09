@@ -1,0 +1,36 @@
+name: semantic-pull-request
+true:
+  pull_request_target:
+    types:
+    - opened
+    - edited
+    - synchronize
+permissions:
+  pull-requests: read
+jobs:
+  semantic:
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    steps:
+    - uses: amannn/action-semantic-pull-request@v5
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        types: 'feat
+
+          fix
+
+          chore
+
+          docs
+
+          refactor
+
+          perf
+
+          test
+
+          '
+        requireScope: false
+'on':
+- workflow_dispatch

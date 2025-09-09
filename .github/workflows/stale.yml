@@ -1,0 +1,19 @@
+name: stale
+true:
+  schedule:
+  - cron: 0 2 * * 0
+jobs:
+  stale:
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/stale@v9
+      with:
+        days-before-stale: 60
+        days-before-close: 14
+        stale-issue-label: stale
+        stale-pr-label: stale
+        exempt-issue-labels: security
+        operations-per-run: 500
+'on':
+- workflow_dispatch

@@ -1,0 +1,15 @@
+name: release-sign-provenance
+true:
+  workflow_dispatch: null
+  release:
+    types:
+    - published
+jobs:
+  noop:
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    steps:
+    - name: Placeholder
+      run: echo "Provenance signing pipeline is placeholder. No-op."
+'on':
+- workflow_dispatch

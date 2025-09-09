@@ -1,0 +1,35 @@
+name: osv-gate
+true:
+- push
+- pull_request
+jobs:
+  gate:
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    env:
+      OSV_SEVERITY_THRESHOLD: ${{ vars.OSV_SEVERITY_THRESHOLD }}
+    steps:
+    - uses: actions/checkout@v4
+    - name: Run OSV scanner (JSON)
+      uses: google/osv-scanner-action@v1
+      with:
+        path: .
+        output: osv.json
+    - name: Enforce severity threshold
+      run: "python3 - <<'PY'\nimport json, os, sys\nthreshold = (os.environ.get(\"\
+        OSV_SEVERITY_THRESHOLD\") or \"CRITICAL\").upper()\nsev_order = [\"LOW\",\"\
+        MODERATE\",\"HIGH\",\"CRITICAL\"]\ndef sev(v):\n  for s in v.get(\"severity\"\
+        , []):\n    t=s.get(\"type\",\"\").upper()\n    if t in (\"CVSS_V3\",\"CVSS_V2\"\
+        ):\n      try:\n        score=float(s.get(\"score\",\"0\").split(\"/\")[0])\n\
+        \      except Exception:\n        continue\n      if score >= 9.0: return\
+        \ \"CRITICAL\"\n      if score >= 7.0: return \"HIGH\"\n      if score >=\
+        \ 4.0: return \"MODERATE\"\n      return \"LOW\"\n  return None\ntry:\n  data=json.load(open(\"\
+        osv.json\",\"r\"))\nexcept Exception:\n  print(\"No osv.json. Passing.\");\
+        \ sys.exit(0)\nbad=[]\nfor r in data.get(\"results\", []):\n  for p in r.get(\"\
+        packages\", []):\n    for v in p.get(\"vulnerabilities\", []):\n      s=sev(v)\n\
+        \      if s and sev_order.index(s) >= sev_order.index(threshold):\n      \
+        \  bad.append(v.get(\"id\"))\nif bad:\n  print(\"Blocking due to OSV findings\
+        \ at or above\", threshold)\n  for b in bad: print(\" -\", b)\n  sys.exit(1)\n\
+        print(\"OSV gate passed.\")\nPY\n"
+'on':
+- workflow_dispatch

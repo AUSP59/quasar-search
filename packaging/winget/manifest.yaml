@@ -1,0 +1,12 @@
+# Skeletal WinGet manifest (fill in on release)
+PackageIdentifier: YourOrg.QuasarApex
+PackageVersion: 0.0.0
+PackageName: Quasar Apex
+Publisher: Your Org
+License: Apache-2.0
+ShortDescription: High-performance portable C++ text search toolkit
+Installers:
+  - Architecture: x64
+    InstallerType: zip
+    InstallerUrl: https://github.com/OWNER/REPO/releases/download/v0.0.0/quasar-apex-win64.zip
+    InstallerSha256: 0000000000000000000000000000000000000000000000000000000000000000

@@ -1,0 +1,30 @@
+name: coverage
+true:
+- push
+- pull_request
+jobs:
+  gcovr:
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install gcovr
+      run: sudo apt-get update && sudo apt-get install -y gcovr
+    - name: Configure with coverage flags
+      run: cmake -S . -B build -D CMAKE_BUILD_TYPE=Debug -D QUASAR_ENABLE_TESTS=ON
+        -D CMAKE_CXX_FLAGS="--coverage" -D CMAKE_EXE_LINKER_FLAGS="--coverage"
+    - name: Build & Test
+      run: 'cmake --build build -j
+
+        ctest --test-dir build --output-on-failure || true
+
+        '
+    - name: Generate coverage.xml
+      run: gcovr -r . --xml -o coverage.xml
+    - name: Upload to Codecov (optional, works for public repos without token)
+      uses: codecov/codecov-action@v4
+      with:
+        files: coverage.xml
+        fail_ci_if_error: false
+'on':
+- workflow_dispatch

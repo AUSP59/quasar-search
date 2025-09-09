@@ -1,0 +1,18 @@
+site_name: Quasar Apex
+theme:
+  name: material
+nav:
+  - Home: index.md
+  - Architecture: docs/ARCHITECTURE.md
+  - CLI Guide: docs/CLI_GUIDE.md
+  - Operations Runbook: docs/OPERATIONS_RUNBOOK.md
+  - Reproducible Builds: docs/REPRODUCIBLE_BUILDS.md
+  - Security: SECURITY.md
+  - Threat Model: docs/THREAT_MODEL.md
+  - Compliance Map: docs/COMPLIANCE_MAP.md
+  - Whitepaper: WHITEPAPER.md
+markdown_extensions:
+  - admonition
+  - codehilite
+  - toc:
+      permalink: true

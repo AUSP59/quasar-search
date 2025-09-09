@@ -1,0 +1,17 @@
+name: codespell
+true:
+- push
+- pull_request
+jobs:
+  spellcheck:
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: codespell-project/actions-codespell@v2
+      with:
+        check_filenames: true
+        ignore_words_list: crate,fo
+        skip: ./.git,./.venv,./build,./.cache,./site
+'on':
+- workflow_dispatch

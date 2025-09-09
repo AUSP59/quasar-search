@@ -1,0 +1,9 @@
+PROJECT_NAME           = "Quasar Apex"
+OUTPUT_DIRECTORY       = doc_output
+GENERATE_HTML          = YES
+GENERATE_LATEX         = NO
+RECURSIVE              = YES
+INPUT                  = include src
+EXTRACT_PRIVATE        = NO
+WARN_AS_ERROR          = NO
+QUIET                  = YES

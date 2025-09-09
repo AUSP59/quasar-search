@@ -1,0 +1,19 @@
+name: container-rootless
+true:
+- push
+- pull_request
+jobs:
+  build:
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build rootless/distroless image
+      run: 'docker build -f container/Dockerfile.rootless -t quasar-apex:rootless
+        .
+
+        docker run --rm quasar-apex:rootless --help || true
+
+        '
+'on':
+- workflow_dispatch

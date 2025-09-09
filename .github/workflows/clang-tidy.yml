@@ -1,0 +1,33 @@
+name: clang-tidy
+true:
+- push
+- pull_request
+jobs:
+  tidy:
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install clang-tools
+      run: 'sudo apt-get update
+
+        sudo apt-get install -y clang-tidy
+
+        '
+    - name: Configure
+      run: cmake -S . -B build -D CMAKE_EXPORT_COMPILE_COMMANDS=ON
+    - name: Run clang-tidy
+      run: "files=$(git ls-files '*.c' '*.cc' '*.cxx' '*.cpp' 2>/dev/null | tr '\\\
+        n' ' ')\nif [ -n \"$files\" ]; then\n  clang-tidy -p build $files || true\n\
+        else\n  echo \"No C/C++ source files found.\"\nfi\n"
+    - name: SPDX header quick check
+      run: "python3 - <<'PY'\nimport sys,glob,io\nok=True\nexts={\".c\",\".cc\",\"\
+        .cxx\",\".cpp\",\".hpp\",\".h\",\".ixx\",\".cmake\",\".sh\",\".py\",\".yml\"\
+        ,\".yaml\",\".json\",\".toml\"}\nfor f in glob.glob(\"**/*\", recursive=True):\n\
+        \  if any(f.endswith(ext) for ext in exts):\n    try:\n      head=io.open(f,encoding=\"\
+        utf-8\",errors=\"ignore\").read().splitlines()[:5]\n    except Exception:\n\
+        \      continue\n    if not any(\"SPDX-License-Identifier:\" in line for line\
+        \ in head):\n      print(\"Missing SPDX header:\", f)\n      ok=False\nif\
+        \ not ok: sys.exit(1)\nprint(\"SPDX headers OK\")\nPY\n"
+'on':
+- workflow_dispatch

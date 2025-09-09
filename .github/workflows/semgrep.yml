@@ -1,0 +1,19 @@
+name: semgrep
+true:
+- push
+- pull_request
+jobs:
+  semgrep:
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: returntocorp/semgrep-action@v1
+      with:
+        config: p/c p/security-audit
+        generateSarif: '1'
+    - uses: github/codeql-action/upload-sarif@v3
+      with:
+        sarif_file: semgrep.sarif
+'on':
+- workflow_dispatch

@@ -1,0 +1,21 @@
+name: labeler
+true:
+  pull_request_target:
+    types:
+    - opened
+    - synchronize
+    - reopened
+    - edited
+permissions:
+  contents: read
+  pull-requests: write
+jobs:
+  label:
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/labeler@v5
+      with:
+        configuration-path: .github/labeler.yml
+'on':
+- workflow_dispatch

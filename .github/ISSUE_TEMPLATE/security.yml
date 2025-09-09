@@ -1,0 +1,14 @@
+// SPDX-License-Identifier: Apache-2.0
+---
+name: Security report (please read)
+about: Please DO NOT disclose vulnerabilities publicly. Use Security Advisories.
+title: "Security report"
+labels: ["security"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ⚠️ Please DO NOT open public issues for vulnerabilities.
+        Use **GitHub Security Advisories** (private) as described in SECURITY.md.
+        If unavailable, email security@alanursapu@gmail.com.

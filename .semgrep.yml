@@ -1,0 +1,10 @@
+# SPDX-License-Identifier: Apache-2.0
+rules:
+- id: dangerous-c-apis
+  patterns:
+  - pattern: gets(...)
+  - pattern: strcpy(...)
+  - pattern: strcat(...)
+  message: "Avoid dangerous C APIs."
+  languages: [c, cpp]
+  severity: ERROR

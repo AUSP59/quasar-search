@@ -1,0 +1,13 @@
+# syntax=docker/dockerfile:1.7-labs
+# Two-stage: builder + distroless runtime (glibc). Non-root user.
+FROM --platform=$BUILDPLATFORM debian:stable-slim AS builder
+RUN apt-get update && apt-get install -y --no-install-recommends     build-essential cmake git ca-certificates && rm -rf /var/lib/apt/lists/*
+WORKDIR /src
+COPY . .
+RUN cmake -S . -B build -D CMAKE_BUILD_TYPE=Release && cmake --build build -j && cmake --install build --prefix /out
+
+FROM gcr.io/distroless/cc-debian12:nonroot
+USER nonroot:nonroot
+COPY --from=builder /out /usr/local
+ENTRYPOINT ["/usr/local/bin/quasar-grep"]
+CMD ["--help"]

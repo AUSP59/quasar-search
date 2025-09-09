@@ -1,0 +1,18 @@
+name: e2e-cli
+true:
+- push
+- pull_request
+jobs:
+  e2e:
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Configure
+      run: cmake -S . -B build -D CMAKE_BUILD_TYPE=Release -D QUASAR_ENABLE_TESTS=ON
+    - name: Build
+      run: cmake --build build -j
+    - name: Run e2e
+      run: bash tests/e2e_grep.sh build/apps/quasar-grep
+'on':
+- workflow_dispatch

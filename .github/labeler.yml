@@ -1,0 +1,12 @@
+area/docs:
+  - changed-files:
+      - any-glob-to-any-file: ['docs/**', '**/*.md']
+area/build:
+  - changed-files:
+      - any-glob-to-any-file: ['CMakeLists.txt', '**/*.cmake', 'CMakePresets.json', '.github/workflows/**']
+area/security:
+  - changed-files:
+      - any-glob-to-any-file: ['SECURITY.md', '.github/workflows/*security*', '**/policy/**']
+area/cli:
+  - changed-files:
+      - any-glob-to-any-file: ['apps/**', 'man/**', 'completions/**', 'tests/cli/**']

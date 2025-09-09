@@ -1,0 +1,15 @@
+package(default_visibility = ["//visibility:public"])
+
+cc_library(
+    name = "quasar",
+    srcs = glob(["src/**/*.cc", "src/**/*.cpp"]),
+    hdrs = glob(["include/**/*.h", "include/**/*.hpp"]),
+    includes = ["include"],
+    copts = ["-Wall", "-Wextra", "-Wpedantic"],
+)
+
+cc_binary(
+    name = "quasar-grep",
+    srcs = glob(["apps/quasar-grep*.cc", "apps/quasar-grep*.cpp"]),
+    deps = [":quasar"],
+)

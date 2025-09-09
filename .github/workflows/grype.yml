@@ -1,0 +1,17 @@
+name: grype-scan
+true:
+- push
+- pull_request
+jobs:
+  grype:
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Anchore Grype scan (filesystem)
+      uses: anchore/scan-action@v4
+      with:
+        path: .
+      continue-on-error: true
+'on':
+- workflow_dispatch

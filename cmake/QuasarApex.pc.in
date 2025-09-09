@@ -1,0 +1,10 @@
+prefix=${CMAKE_INSTALL_PREFIX}
+exec_prefix=${prefix}
+libdir=${CMAKE_INSTALL_FULL_LIBDIR}
+includedir=${CMAKE_INSTALL_FULL_INCLUDEDIR}
+
+Name: quasar-apex
+Description: High-performance portable C++ text search toolkit
+Version: @QUASAR_VERSION_MAJOR@.@QUASAR_VERSION_MINOR@.@QUASAR_VERSION_PATCH@
+Libs: -L${libdir} -lquasar
+Cflags: -I${includedir}

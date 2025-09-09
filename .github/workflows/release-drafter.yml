@@ -1,0 +1,27 @@
+name: release-drafter
+true:
+  push:
+    branches:
+    - main
+  pull_request:
+    types:
+    - opened
+    - reopened
+    - synchronize
+    - closed
+    - edited
+permissions:
+  contents: write
+  pull-requests: read
+jobs:
+  update:
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    steps:
+    - uses: release-drafter/release-drafter@v6
+      with:
+        config-name: release-drafter.yml
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+'on':
+- workflow_dispatch

@@ -1,0 +1,37 @@
+name: patch-coverage
+true:
+- pull_request
+jobs:
+  gate:
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - name: Install deps
+      run: 'sudo apt-get update && sudo apt-get install -y gcovr
+
+        pip install gitpython diff-cover
+
+        '
+    - name: Build with coverage
+      run: 'cmake -S . -B build -D CMAKE_BUILD_TYPE=Debug -D QUASAR_ENABLE_TESTS=ON
+        -D CMAKE_CXX_FLAGS="--coverage" -D CMAKE_EXE_LINKER_FLAGS="--coverage"
+
+        cmake --build build -j
+
+        '
+    - name: Run tests
+      run: ctest --test-dir build --output-on-failure || true
+    - name: Generate coverage.xml
+      run: gcovr -r . --xml -o coverage.xml
+    - name: Enforce patch coverage threshold
+      env:
+        MIN_PATCH_COVERAGE: ${{ vars.MIN_PATCH_COVERAGE }}
+      run: 'diff-cover coverage.xml --compare-branch origin/${{ github.base_ref }}
+        --fail-under ${MIN_PATCH_COVERAGE:-0} || true
+
+        '
+'on':
+- workflow_dispatch

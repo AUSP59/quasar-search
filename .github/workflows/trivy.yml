@@ -1,0 +1,22 @@
+name: trivy-scan
+true:
+- push
+- pull_request
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  trivy:
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Run Trivy FS scan
+      uses: aquasecurity/trivy-action@0.20.0
+      with:
+        scan-type: fs
+        scan-ref: .
+        ignore-unfixed: true
+        format: table
+'on':
+- workflow_dispatch

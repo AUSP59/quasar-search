@@ -1,0 +1,25 @@
+name: thread-sanitizer
+true:
+- push
+- pull_request
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  tsan:
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install Clang
+      run: sudo apt-get update && sudo apt-get install -y clang
+    - name: Configure
+      run: CC=clang CXX=clang++ cmake -S . -B build -D CMAKE_BUILD_TYPE=RelWithDebInfo
+        -D QUASAR_ENABLE_TESTS=ON -D CMAKE_CXX_FLAGS='-fsanitize=thread -fno-omit-frame-pointer'
+    - name: Build
+      run: cmake --build build -j
+    - name: Test
+      run: TSAN_OPTIONS=halt_on_error=1 ctest --test-dir build --output-on-failure
+        || true
+'on':
+- workflow_dispatch

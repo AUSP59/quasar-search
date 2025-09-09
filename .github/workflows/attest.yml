@@ -1,0 +1,20 @@
+name: slsa-attest
+true:
+  workflow_run:
+    workflows:
+    - Release
+    types:
+    - completed
+jobs:
+  attest:
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: write
+    steps:
+    - uses: actions/checkout@v4
+    - name: Upload provenance placeholder (replace with SLSA generator if desired)
+      run: echo "See slsa-provenance.example.json"
+'on':
+- workflow_dispatch

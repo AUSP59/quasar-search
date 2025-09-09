@@ -1,0 +1,12 @@
+# syntax=docker/dockerfile:1.7-labs
+# Build static binary (best-effort with musl) and run on scratch.
+FROM alpine:3.20 AS builder
+RUN apk add --no-cache build-base cmake ninja git musl-dev
+WORKDIR /src
+COPY . .
+RUN cmake -S . -B build -G Ninja -D CMAKE_BUILD_TYPE=Release -D QUASAR_STATIC_LINK=ON &&     cmake --build build -j &&     cmake --install build --prefix /out
+
+FROM scratch
+COPY --from=builder /out /
+ENTRYPOINT ["/bin/quasar-grep"]
+CMD ["--help"]

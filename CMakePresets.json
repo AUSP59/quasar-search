@@ -1,0 +1,22 @@
+{
+  "version": 6,
+  "configurePresets": [
+    { "name": "dev", "generator": "Ninja", "binaryDir": "build/dev", "cacheVariables": { "CMAKE_BUILD_TYPE": "Debug", "QUASAR_ENABLE_TESTS": "ON" } },
+    { "name": "release", "generator": "Ninja", "binaryDir": "build/release", "cacheVariables": { "CMAKE_BUILD_TYPE": "Release" } },
+    { "name": "asan", "inherits": "dev", "cacheVariables": { "CMAKE_CXX_FLAGS": "-fsanitize=address -fno-omit-frame-pointer", "CMAKE_EXE_LINKER_FLAGS": "-fsanitize=address" } },
+    { "name": "ubsan", "inherits": "dev", "cacheVariables": { "CMAKE_CXX_FLAGS": "-fsanitize=undefined -fno-omit-frame-pointer", "CMAKE_EXE_LINKER_FLAGS": "-fsanitize=undefined" } },
+    { "name": "tsan", "inherits": "dev", "cacheVariables": { "CMAKE_CXX_FLAGS": "-fsanitize=thread -fno-omit-frame-pointer", "CMAKE_EXE_LINKER_FLAGS": "-fsanitize=thread" } },
+    { "name": "msan", "inherits": "dev", "cacheVariables": { "CMAKE_CXX_FLAGS": "-fsanitize=memory -fno-omit-frame-pointer", "CMAKE_EXE_LINKER_FLAGS": "-fsanitize=memory" } },
+    { "name": "pgo-generate", "inherits": "release", "cacheVariables": { "QUASAR_ENABLE_PGO_GENERATE": "ON" } },
+    { "name": "pgo-use", "inherits": "release", "cacheVariables": { "QUASAR_ENABLE_PGO_USE": "ON" } },
+    { "name": "lto", "inherits": "release", "cacheVariables": { "QUASAR_ENABLE_LTO": "ON" } },
+    { "name": "static", "inherits": "release", "cacheVariables": { "QUASAR_STATIC_LINK": "ON" } }
+  ],
+  "buildPresets": [
+    { "name": "dev", "configurePreset": "dev" },
+    { "name": "release", "configurePreset": "release" }
+  ],
+  "testPresets": [
+    { "name": "dev", "configurePreset": "dev" }
+  ]
+}

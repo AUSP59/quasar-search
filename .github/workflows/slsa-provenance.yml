@@ -1,0 +1,12 @@
+name: slsa-provenance
+true:
+  workflow_dispatch: null
+jobs:
+  noop:
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    steps:
+    - name: Placeholder
+      run: echo "SLSA provenance generation is placeholder. No-op."
+'on':
+- workflow_dispatch

@@ -1,0 +1,7 @@
+# Normalize line endings
+* text=auto
+
+# Linguist hints
+docs/* linguist-documentation
+presskit/* linguist-documentation
+examples/* linguist-documentation

@@ -1,0 +1,6 @@
+QUASAR_1.0 {
+  global:
+    quasar_*;
+  local:
+    *;
+};

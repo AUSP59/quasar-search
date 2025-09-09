@@ -1,0 +1,35 @@
+name: linux-compilers
+true:
+- push
+- pull_request
+jobs:
+  build:
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        cc:
+        - gcc
+        - clang
+        build_type:
+        - Debug
+        - Release
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install toolchains
+      run: 'sudo apt-get update
+
+        if [ "${{ matrix.cc }}" = "clang" ]; then sudo apt-get install -y clang; fi
+
+        if [ "${{ matrix.cc }}" = "gcc" ]; then sudo apt-get install -y g++; fi
+
+        '
+    - name: Configure
+      run: CC=${{ matrix.cc }} CXX=${{ matrix.cc }}++ cmake -S . -B build -D CMAKE_BUILD_TYPE=${{
+        matrix.build_type }} -D QUASAR_ENABLE_TESTS=ON
+    - name: Build
+      run: cmake --build build -j
+    - name: Test
+      run: ctest --test-dir build --output-on-failure
+'on':
+- workflow_dispatch

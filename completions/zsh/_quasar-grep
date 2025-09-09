@@ -1,0 +1,2 @@
+#compdef quasar-grep
+_arguments   '(-h --help)'{-h,--help}'[Show help]'   '--count[Count matches]'   '--json[JSON summary]'   '*:files:_files'

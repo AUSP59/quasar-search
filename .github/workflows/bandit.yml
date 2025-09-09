@@ -1,0 +1,16 @@
+name: bandit
+true:
+- push
+- pull_request
+jobs:
+  bandit:
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install bandit
+      run: sudo apt-get update && sudo apt-get install -y bandit || pipx install bandit
+    - name: Run bandit (best-effort)
+      run: bandit -r scripts || true
+'on':
+- workflow_dispatch

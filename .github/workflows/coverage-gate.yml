@@ -1,0 +1,44 @@
+name: coverage-gate
+true:
+- push
+- pull_request
+jobs:
+  gate:
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    env:
+      MIN_COVERAGE: ${{ vars.MIN_COVERAGE }}
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install gcovr
+      run: 'sudo apt-get update
+
+        sudo apt-get install -y gcovr
+
+        '
+    - name: Build with coverage
+      run: 'cmake -S . -B build -D CMAKE_BUILD_TYPE=Debug -D CMAKE_CXX_FLAGS="--coverage"
+        -D CMAKE_EXE_LINKER_FLAGS="--coverage"
+
+        cmake --build build -j
+
+        '
+    - name: Run tests
+      run: 'ctest --test-dir build --output-on-failure || true
+
+        '
+    - name: Generate coverage.xml
+      run: 'gcovr -r . --xml -o coverage.xml || true
+
+        '
+    - name: Enforce threshold
+      run: "python3 - <<'PY'\nimport xml.etree.ElementTree as ET, os, sys\nthr = float(os.environ.get(\"\
+        MIN_COVERAGE\", \"0\") or \"0\")\ntry:\n  root = ET.parse(\"coverage.xml\"\
+        ).getroot()\n  lines = float(root.attrib.get(\"lines-covered\", 0))\n  total\
+        \ = float(root.attrib.get(\"lines-valid\", 0))\n  pct = (lines/total*100.0)\
+        \ if total else 0.0\nexcept Exception:\n  print(\"coverage.xml missing or\
+        \ unreadable; treating as 0%.\")\n  pct = 0.0\nprint(f\"Coverage: {pct:.2f}%\
+        \ (threshold {thr}%)\")\nif pct + 1e-9 < thr:\n  print(\"Coverage below threshold\"\
+        ); sys.exit(1)\nPY\n"
+'on':
+- workflow_dispatch

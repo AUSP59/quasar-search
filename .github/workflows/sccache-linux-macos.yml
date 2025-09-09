@@ -1,0 +1,26 @@
+name: sccache-linux-macos
+true:
+- push
+- pull_request
+jobs:
+  build:
+    continue-on-error: true
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os:
+        - ubuntu-latest
+        - macos-14
+        build_type:
+        - Debug
+        - Release
+    steps:
+    - uses: actions/checkout@v4
+    - uses: mozilla-actions/sccache-action@v0.0.4
+    - name: Configure
+      run: cmake -S . -B build -D CMAKE_BUILD_TYPE=${{ matrix.build_type }} -D CMAKE_C_COMPILER_LAUNCHER=sccache
+        -D CMAKE_CXX_COMPILER_LAUNCHER=sccache
+    - name: Build
+      run: cmake --build build -j
+'on':
+- workflow_dispatch

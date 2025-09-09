@@ -1,0 +1,13 @@
+name: typos
+true:
+- push
+- pull_request
+jobs:
+  typos:
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: crate-ci/typos@v1.24.6
+'on':
+- workflow_dispatch

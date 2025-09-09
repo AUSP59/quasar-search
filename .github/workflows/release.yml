@@ -1,0 +1,66 @@
+name: Release
+true:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: SemVer tag (e.g., v10.2.0)
+        required: true
+jobs:
+  build_release:
+    strategy:
+      matrix:
+        os:
+        - ubuntu-latest
+        - macos-latest
+        - windows-latest
+    continue-on-error: true
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup ccache
+      uses: hendrikmuhs/ccache-action@v1
+    - name: Configure
+      run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DQUASAR_ENABLE_TESTS=ON
+    - name: Build
+      run: cmake --build build -j
+    - name: Package
+      run: (cd build && cpack -G TGZ -G ZIP) || true
+    - name: Checksums
+      shell: bash
+      run: "cd build\nfor f in *.zip *.tgz; do\n  [ -f \"$f\" ] && shasum -a 256 \"\
+        $f\" > \"$f.sha256\" || true\ndone\n"
+    - name: Generate SBOM (CycloneDX) if python available
+      shell: bash
+      run: 'python3 sbom/generate.py || true
+
+        '
+    - name: Upload release artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: quasar-${{ matrix.os }}
+        path: 'build/*.zip
+
+          build/*.tgz
+
+          build/*.sha256
+
+          compliance/sbom.cdx.json
+
+          '
+  provenance:
+    needs:
+    - build_release
+    if: ${{ github.event.inputs.version }}
+    permissions:
+      actions: read
+      id-token: write
+      contents: write
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Generate provenance (SLSA) placeholder
+      run: echo "Provenance generation can be wired to slsa-framework action once
+        repository is live."
+'on':
+- workflow_dispatch

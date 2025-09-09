@@ -1,0 +1,11 @@
+name: Feature request
+description: Suggest an idea for Quasar Apex
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: value
+    attributes:
+      label: Value proposition
+      description: What problem does this solve?
+    validations:
+      required: true

@@ -1,0 +1,30 @@
+// SPDX-License-Identifier: Apache-2.0
+---
+name: Bug report
+about: Create a report to help us improve
+title: "[bug] "
+labels: ["bug"]
+assignees: []
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What happened and what did you expect?
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Reproduction steps
+      description: Clear, minimal steps to reproduce
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      placeholder: Output of `quasar-grep --version` and git commit hash
+  - type: input
+    id: env
+    attributes:
+      label: Environment
+      placeholder: OS / compiler / CPU

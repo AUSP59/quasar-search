@@ -1,0 +1,26 @@
+name: syft-sbom
+true:
+- push
+- pull_request
+jobs:
+  sbom:
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Generate SBOM (SPDX JSON & CycloneDX JSON)
+      uses: anchore/sbom-action@v0
+      with:
+        path: .
+        artifact-name: sbom-syft
+        upload-artifact: true
+        format: spdx-json
+    - name: Also generate CycloneDX JSON
+      uses: anchore/sbom-action@v0
+      with:
+        path: .
+        artifact-name: sbom-cyclonedx
+        upload-artifact: true
+        format: cyclonedx-json
+'on':
+- workflow_dispatch

@@ -1,0 +1,7 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: Quasar Apex
+Upstream-Contact: Quasar Apex Authors <maintainers@alanursapu@gmail.com>
+Source: https://github.com/OWNER/REPO
+Files: *
+Copyright: 2025 Quasar Apex Authors
+License: Apache-2.0

@@ -1,0 +1,25 @@
+\
+.TH QUASAR-GREP 1 "August 2025" "Quasar Apex" "User Commands"
+.SH NAME
+quasar-grep \- high-performance text search
+.SH SYNOPSIS
+.B quasar-grep
+[\-h|\-\-help] [\-\-count] [\-\-json] [\fIPATTERN\fR] [\fIFILE\fR...]
+.SH DESCRIPTION
+.B quasar-grep
+searches for PATTERN in each FILE. Outputs matches to stdout.
+.PP
+Options:
+.TP
+.B \-\-count
+Only print the count of matches.
+.TP
+.B \-\-json
+Emit machine-readable JSON summary.
+.TP
+.B \-h, \-\-help
+Show help message and exit.
+.SH EXIT STATUS
+Returns 0 on success, non-zero on error.
+.SH AUTHORS
+Quasar Apex Authors.

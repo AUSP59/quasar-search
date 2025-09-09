@@ -1,0 +1,10 @@
+prefix=${pcfiledir}/../..
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: quasar-apex
+Description: High-performance C++ text search library and CLIs
+Version: 10.0.0
+Libs: -L${libdir} -lquasar
+Cflags: -I${includedir}

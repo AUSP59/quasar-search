@@ -1,0 +1,26 @@
+// SPDX-License-Identifier: Apache-2.0
+{
+  "version": "0.2",
+  "language": "en",
+  "words": [
+    "Quasar",
+    "Apex",
+    "quasar",
+    "AstraCore",
+    "CLI",
+    "CMake",
+    "CTest",
+    "CPack",
+    "Doxygen",
+    "CodeQL",
+    "SBOM",
+    "SLSA",
+    "SPDX"
+  ],
+  "ignorePaths": [
+    "build/**",
+    "dist/**",
+    ".git/**",
+    "docs/html/**"
+  ]
+}

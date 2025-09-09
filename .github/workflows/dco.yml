@@ -1,0 +1,14 @@
+name: dco
+true:
+- pull_request_target
+permissions:
+  contents: read
+  pull-requests: write
+jobs:
+  dco:
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    steps:
+    - uses: tim-actions/dco@v1.3.0
+'on':
+- workflow_dispatch

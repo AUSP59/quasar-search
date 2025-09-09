@@ -1,0 +1,14 @@
+// SPDX-License-Identifier: Apache-2.0
+{
+  "version": "10.0.0",
+  "description": "High-performance portable C++ text search toolkit",
+  "homepage": "https://github.com/OWNER/REPO",
+  "license": "Apache-2.0",
+  "architecture": {
+    "64bit": {
+      "url": "https://github.com/OWNER/REPO/releases/download/v10.0.0/quasar-apex-10.0.0-win64.zip",
+      "hash": "REPLACE_WITH_REAL_HASH",
+      "bin": [ "quasar-grep.exe", "quasar-ls.exe", "quasar-bench.exe", "quasar-cpu.exe" ]
+    }
+  }
+}

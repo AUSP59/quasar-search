@@ -1,0 +1,34 @@
+name: reproducible-artifacts
+true:
+- push
+- pull_request
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  repro:
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - name: Normalize tarball (first build)
+      run: 'bash scripts/release/tarball_normalize.sh out1.tar.gz
+
+        '
+    - name: Sleep to change wall clock (should not affect)
+      run: sleep 1
+    - name: Normalize tarball (second build)
+      run: 'bash scripts/release/tarball_normalize.sh out2.tar.gz
+
+        '
+    - name: Compare digests
+      run: 'sha256sum out*.tar.gz
+
+        diff <(sha256sum out1.tar.gz | cut -d'' '' -f1) <(sha256sum out2.tar.gz |
+        cut -d'' '' -f1)
+
+        '
+'on':
+- workflow_dispatch

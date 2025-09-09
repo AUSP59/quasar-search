@@ -1,0 +1,29 @@
+name: valgrind
+true:
+- push
+- pull_request
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  memcheck:
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install valgrind
+      run: sudo apt-get update && sudo apt-get install -y valgrind
+    - name: Configure (Debug)
+      run: cmake -S . -B build -D CMAKE_BUILD_TYPE=Debug -D QUASAR_ENABLE_TESTS=ON
+    - name: Build
+      run: cmake --build build -j
+    - name: Memcheck (ctest)
+      env:
+        CTEST_MEMORYCHECK_COMMAND: valgrind
+      run: 'ctest --test-dir build --output-on-failure || true
+
+        # Optionally, one can use: ctest -T memcheck
+
+        '
+'on':
+- workflow_dispatch

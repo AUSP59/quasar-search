@@ -1,0 +1,31 @@
+name: mkdocs-gh-pages
+true:
+  push:
+    branches:
+    - main
+  workflow_dispatch: null
+permissions:
+  contents: write
+jobs:
+  build-deploy:
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    steps:
+    - uses: step-security/harden-runner@v2
+      with:
+        egress-policy: audit
+    - uses: actions/checkout@v4
+    - uses: actions/setup-python@v5
+      with:
+        python-version: 3.x
+    - name: Install mkdocs
+      run: pip install mkdocs mkdocs-material
+    - name: Build site
+      run: mkdocs build
+    - name: Deploy to gh-pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./site
+'on':
+- workflow_dispatch

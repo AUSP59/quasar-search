@@ -1,0 +1,21 @@
+name: bench
+true:
+- workflow_dispatch
+jobs:
+  run:
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build benchmark
+      run: cmake -S bench -B bench/build && cmake --build bench/build -j
+    - name: Run benchmark
+      run: ./bench/build/bench_smoke --benchmark_format=json --benchmark_out=bench/results.json
+        || true
+    - name: Upload results
+      uses: actions/upload-artifact@v4
+      with:
+        name: bench-results
+        path: bench/results.json
+'on':
+- workflow_dispatch

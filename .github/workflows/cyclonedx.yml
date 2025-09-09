@@ -1,0 +1,22 @@
+name: cyclonedx-sbom
+true:
+- push
+- pull_request
+jobs:
+  cdx:
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Generate CycloneDX SBOM (best-effort)
+      uses: CycloneDX/gh-cdxgen-action@v4
+      with:
+        path: .
+        specs: '1.5'
+    - name: Upload SBOM
+      uses: actions/upload-artifact@v4
+      with:
+        name: cyclonedx-bom
+        path: bom.xml
+'on':
+- workflow_dispatch

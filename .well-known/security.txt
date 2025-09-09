@@ -1,0 +1,4 @@
+Contact: mailto:security@alanursapu@gmail.com
+Policy: https://alanursapu@gmail.com/security
+Preferred-Languages: en, es
+Canonical: https://alanursapu@gmail.com/.well-known/security.txt

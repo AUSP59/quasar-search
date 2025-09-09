@@ -1,0 +1,16 @@
+name: container-scratch
+true:
+- push
+- pull_request
+jobs:
+  build:
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build scratch image
+      run: docker build -f container/Dockerfile.scratch -t quasar-apex:scratch .
+    - name: Smoke run
+      run: docker run --rm quasar-apex:scratch --help || true
+'on':
+- workflow_dispatch

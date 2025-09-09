@@ -1,0 +1,20 @@
+name: licensee
+true:
+- push
+- pull_request
+jobs:
+  check:
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install licensee
+      run: 'sudo apt-get update && sudo apt-get install -y ruby-full build-essential
+
+        sudo gem install licensee
+
+        '
+    - name: Run licensee
+      run: licensee detect . --confidence 60 || true
+'on':
+- workflow_dispatch

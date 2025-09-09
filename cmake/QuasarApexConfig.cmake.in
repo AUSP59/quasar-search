@@ -1,0 +1,4 @@
+@PACKAGE_INIT@
+include(CMakeFindDependencyMacro)
+# find_dependency(example REQUIRED)  # add if needed
+include("${CMAKE_CURRENT_LIST_DIR}/QuasarApexTargets.cmake")

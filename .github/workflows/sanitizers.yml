@@ -1,0 +1,19 @@
+name: sanitizers
+true:
+- push
+- pull_request
+jobs:
+  asan-ubsan:
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Configure (ASan/UBSan)
+      run: cmake -S . -B build -D CMAKE_BUILD_TYPE=Debug -D QUASAR_ENABLE_SANITIZERS=ON
+        -D QUASAR_ENABLE_TESTS=ON
+    - name: Build
+      run: cmake --build build -j
+    - name: Test (ASan/UBSan)
+      run: ctest --test-dir build --output-on-failure
+'on':
+- workflow_dispatch

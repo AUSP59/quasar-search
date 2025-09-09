@@ -1,0 +1,25 @@
+name: scancode
+true:
+- push
+- pull_request
+jobs:
+  scan:
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install scancode-toolkit
+      run: pipx install scancode-toolkit || pip install scancode-toolkit
+    - name: Run scancode (summary)
+      run: scancode --summary scancode-summary.json --json-pp scancode.json -n 2 .
+        || true
+    - uses: actions/upload-artifact@v4
+      with:
+        name: scancode-report
+        path: 'scancode-summary.json
+
+          scancode.json
+
+          '
+'on':
+- workflow_dispatch

@@ -1,0 +1,23 @@
+name: reprotest
+true:
+- push
+- pull_request
+jobs:
+  reprotest:
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - name: Install reprotest
+      run: sudo apt-get update && sudo apt-get install -y reprotest
+    - name: Run reprotest (best-effort)
+      run: 'reprotest             --variations=+all             --ignore-build-dir             --             bash
+        -lc ''cmake -S . -B build -D CMAKE_BUILD_TYPE=Release && cmake --build build
+        -j && ctest --test-dir build || true''
+
+        '
+      continue-on-error: true
+'on':
+- workflow_dispatch

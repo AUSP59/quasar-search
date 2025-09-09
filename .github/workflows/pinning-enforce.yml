@@ -1,0 +1,16 @@
+name: pinning-enforce
+true:
+- push
+- pull_request
+jobs:
+  pinning:
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Check action pinning (optional fail)
+      env:
+        ENFORCE_PINNING: ${{ vars.ENFORCE_PINNING }}
+      run: bash scripts/ci/check_pinning.sh
+'on':
+- workflow_dispatch

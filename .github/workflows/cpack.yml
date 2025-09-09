@@ -1,0 +1,28 @@
+name: cpack
+true:
+- push
+- pull_request
+jobs:
+  package:
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    steps:
+    - uses: step-security/harden-runner@v2
+      with:
+        egress-policy: audit
+    - uses: actions/checkout@v4
+    - name: Build & package
+      run: 'cmake -S . -B build -D CMAKE_BUILD_TYPE=Release
+
+        cmake --build build -j
+
+        (cd build && cpack -G TGZ -G DEB -G RPM || true)
+
+        '
+    - uses: actions/upload-artifact@v4
+      with:
+        name: cpack-artifacts
+        path: build/*.tar.gz,build/*.deb,build/*.rpm
+        if-no-files-found: ignore
+'on':
+- workflow_dispatch

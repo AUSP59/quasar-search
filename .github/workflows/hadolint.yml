@@ -1,0 +1,16 @@
+name: hadolint
+true:
+- push
+- pull_request
+jobs:
+  lint:
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: hadolint/hadolint-action@v3.1.0
+      with:
+        dockerfile: container/Dockerfile.rootless
+        verbose: true
+'on':
+- workflow_dispatch

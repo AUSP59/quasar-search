@@ -1,0 +1,16 @@
+name: dco-check
+true:
+- pull_request
+jobs:
+  dco:
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - name: Check DCO sign-offs
+      run: "if git log --format='%H %s' origin/main.. | grep -vi 'Signed-off-by:';\
+        \ then\n  echo 'Missing DCO sign-off in some commits.'\n  exit 1\nfi\n"
+'on':
+- workflow_dispatch

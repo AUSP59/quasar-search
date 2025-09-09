@@ -1,0 +1,35 @@
+name: wasi
+true:
+- push
+- pull_request
+jobs:
+  build:
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Download wasi-sdk
+      run: 'set -eux
+
+        ver=20
+
+        curl -L -o wasi-sdk.tar.gz https://github.com/WebAssembly/wasi-sdk/releases/download/wasi-sdk-$ver/wasi-sdk-$ver.0-linux.tar.gz
+
+        tar -xf wasi-sdk.tar.gz
+
+        echo "WASI_SDK_PATH=$PWD/wasi-sdk-$ver.0" >> $GITHUB_ENV
+
+        '
+    - name: Configure
+      run: 'export CC="$WASI_SDK_PATH/bin/clang"
+
+        export CXX="$WASI_SDK_PATH/bin/clang++"
+
+        cmake -S . -B build-wasi -D CMAKE_BUILD_TYPE=Release -D CMAKE_SYSTEM_NAME=Generic
+        -D CMAKE_C_COMPILER=$CC -D CMAKE_CXX_COMPILER=$CXX || true
+
+        '
+    - name: Build
+      run: cmake --build build-wasi -j || true
+'on':
+- workflow_dispatch

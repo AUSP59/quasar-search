@@ -1,0 +1,20 @@
+name: meson
+true:
+- push
+- pull_request
+jobs:
+  build:
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install Meson/Ninja
+      run: sudo apt-get update && sudo apt-get install -y meson ninja-build
+    - name: Build (best-effort)
+      run: 'meson setup builddir || true
+
+        meson compile -C builddir || true
+
+        '
+'on':
+- workflow_dispatch

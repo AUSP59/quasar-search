@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+title: Quasar Apex
+message: If you use this software, please cite it as below.
+type: software
+authors:
+  - family-names: "Apex Authors"
+    given-names: "Quasar"
+license: Apache-2.0
+repository-code: "https://github.com/OWNER/REPO"
+version: "10.0.0"

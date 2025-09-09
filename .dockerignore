@@ -1,0 +1,10 @@
+.git
+.github
+bench
+build
+devcontainer.json
+.DS_Store
+*.swp
+.ccache
+site
+dist

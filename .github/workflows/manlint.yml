@@ -1,0 +1,17 @@
+name: manlint
+true:
+- push
+- pull_request
+jobs:
+  lint:
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install mandoc
+      run: sudo apt-get update && sudo apt-get install -y mandoc
+    - name: Lint man pages
+      run: "for f in man/*.1; do\n  echo \"Linting $f\"; mandoc -T lint \"$f\" ||\
+        \ true\ndone\n"
+'on':
+- workflow_dispatch

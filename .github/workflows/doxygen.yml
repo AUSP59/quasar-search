@@ -1,0 +1,20 @@
+name: doxygen
+true:
+- push
+- pull_request
+jobs:
+  docs:
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install doxygen graphviz
+      run: sudo apt-get update && sudo apt-get install -y doxygen graphviz
+    - name: Build HTML
+      run: doxygen Doxyfile
+    - uses: actions/upload-artifact@v4
+      with:
+        name: doxygen-html
+        path: doc_output/html
+'on':
+- workflow_dispatch

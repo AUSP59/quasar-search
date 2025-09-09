@@ -1,0 +1,22 @@
+name: cxx-standards
+true:
+- push
+- pull_request
+jobs:
+  matrix:
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        standard:
+        - 20
+        - 23
+    steps:
+    - uses: actions/checkout@v4
+    - name: Configure
+      run: cmake -S . -B build -D CMAKE_BUILD_TYPE=Release -D CMAKE_CXX_STANDARD=${{
+        matrix.standard }}
+    - name: Build
+      run: cmake --build build -j
+'on':
+- workflow_dispatch

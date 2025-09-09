@@ -1,0 +1,17 @@
+SPDXVersion: SPDX-2.3
+DataLicense: CC0-1.0
+SPDXID: SPDXRef-DOCUMENT
+DocumentName: QuasarApex-SBOM
+DocumentNamespace: https://example.org/spdxdocs/QuasarApex-2025
+Creator: Tool: SBOM-Generator 0.1
+Created: 2025-08-25T00:00:00Z
+
+PackageName: quasar-apex
+SPDXID: SPDXRef-Package-quasar
+PackageVersion: 2025.0
+PackageSupplier: Organization: Quasar Apex Authors
+PackageDownloadLocation: NOASSERTION
+FilesAnalyzed: true
+PackageLicenseConcluded: Apache-2.0
+PackageLicenseDeclared: Apache-2.0
+PackageCopyrightText: Copyright (c) 2025 Quasar Apex Authors

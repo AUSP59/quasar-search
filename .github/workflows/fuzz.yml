@@ -1,0 +1,33 @@
+name: fuzz
+true:
+- push
+- pull_request
+jobs:
+  libfuzzer:
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install clang
+      run: sudo apt-get update && sudo apt-get install -y clang
+    - name: Configure fuzz
+      run: CC=clang CXX=clang++ cmake -S . -B build -D CMAKE_BUILD_TYPE=RelWithDebInfo
+        -D QUASAR_ENABLE_FUZZ=ON
+    - name: Build fuzz target
+      run: cmake --build build -j --target search_fuzz || cmake --build build -j
+    - name: Run fuzz (short smoke)
+      run: "if [ -x build/fuzz/search_fuzz ]; then\n  build/fuzz/search_fuzz -max_total_time=30\
+        \ -runs=0 -dict=fuzz/dictionary.dict fuzz/corpus || true\nelse\n  echo \"\
+        fuzz target not found; skipping\"\nfi\n"
+    - name: Upload crashes (if any)
+      uses: actions/upload-artifact@v4
+      with:
+        name: fuzz-crashes
+        path: 'crash-*
+
+          build/fuzz/crash-*
+
+          '
+        if-no-files-found: ignore
+'on':
+- workflow_dispatch

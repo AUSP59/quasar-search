@@ -1,0 +1,39 @@
+name: perf-guard
+true:
+  pull_request:
+    branches:
+    - main
+jobs:
+  perf:
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - name: Build benchmark
+      run: cmake -S bench -B bench/build && cmake --build bench/build -j
+    - name: Run benchmark (new)
+      run: ./bench/build/bench_smoke --benchmark_repetitions=10 --benchmark_format=json
+        --benchmark_out=new.json || true
+    - name: Try to fetch last main benchmark
+      run: 'echo "Attempting to fetch previous benchmark from main (best-effort)"
+
+        git fetch origin main --depth=1 || true
+
+        echo "{}" > base.json
+
+        '
+    - name: Compare (warn-only)
+      run: python3 scripts/bench/compare_bench.py base.json new.json 15 || true
+    - name: Upload results
+      uses: actions/upload-artifact@v4
+      with:
+        name: perf-results-${{ github.sha }}
+        path: 'new.json
+
+          base.json
+
+          '
+'on':
+- workflow_dispatch

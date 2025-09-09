@@ -1,0 +1,19 @@
+name: shfmt
+true:
+- push
+- pull_request
+jobs:
+  shfmt:
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install shfmt
+      run: sudo apt-get update && sudo apt-get install -y shfmt || sudo snap install
+        shfmt --classic || true
+    - name: Run shfmt (check only)
+      run: "if command -v shfmt >/dev/null 2>&1; then\n  DIFF=$(shfmt -d . || true);\
+        \ echo \"$DIFF\"; test -z \"$DIFF\"\nelse\n  echo \"shfmt not available; skipping\"\
+        \nfi\n"
+'on':
+- workflow_dispatch

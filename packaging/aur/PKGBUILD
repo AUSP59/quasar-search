@@ -1,0 +1,21 @@
+pkgname=quasar-apex
+pkgver=10.0.0
+pkgrel=1
+pkgdesc="High-performance portable C++ text search toolkit"
+arch=('x86_64' 'aarch64')
+url="https://github.com/OWNER/REPO"
+license=('Apache')
+depends=()
+makedepends=('cmake' 'gcc' 'ninja' 'git')
+source=("$url/archive/refs/tags/v$pkgver.tar.gz")
+sha256sums=('REPLACE_WITH_REAL_SHA256')
+
+build() {
+  cmake -S "$srcdir/REPO-$pkgver" -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
+  cmake --build build -j
+}
+
+package() {
+  DESTDIR="$pkgdir" cmake --install build
+  install -Dm644 "$srcdir/REPO-$pkgver/man/quasar-grep.1" "$pkgdir/usr/share/man/man1/quasar-grep.1"
+}

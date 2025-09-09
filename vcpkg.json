@@ -1,0 +1,8 @@
+{
+  "name": "quasar-apex",
+  "version-string": "10.0.0",
+  "description": "High-performance portable C++ text search toolkit",
+  "homepage": "https://github.com/OWNER/REPO",
+  "license": "Apache-2.0",
+  "features": {}
+}

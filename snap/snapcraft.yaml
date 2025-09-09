@@ -1,0 +1,16 @@
+name: quasar-apex
+base: core22
+version: '0.0.0-dev'
+summary: High-performance portable C++ text search toolkit
+description: |
+  Quasar Apex provides fast textual scanning and search utilities with a modern C++ core.
+grade: devel
+confinement: classic
+apps:
+  quasar-grep:
+    command: quasar-grep
+parts:
+  quasar:
+    plugin: cmake
+    source: .
+    build-packages: [g++, cmake, ninja-build]

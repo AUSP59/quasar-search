@@ -1,0 +1,12 @@
+Source: quasar-apex
+Section: utils
+Priority: optional
+Maintainer: Quasar Apex Authors <maintainers@alanursapu@gmail.com>
+Build-Depends: debhelper-compat (= 13), cmake, g++, ninja-build
+Standards-Version: 4.6.2
+Homepage: https://github.com/OWNER/REPO
+
+Package: quasar-apex
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: High-performance portable C++ text search toolkit

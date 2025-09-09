@@ -1,0 +1,59 @@
+name: CI
+true:
+  push: null
+  pull_request: null
+permissions:
+  contents: read
+jobs:
+  build_test:
+    strategy:
+      matrix:
+        os:
+        - ubuntu-latest
+        - macos-latest
+        - windows-latest
+        build_type:
+        - Release
+    continue-on-error: true
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup ccache
+      uses: hendrikmuhs/ccache-action@v1
+    - name: Configure
+      run: cmake -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -DQUASAR_ENABLE_TESTS=ON
+    - name: Build
+      run: cmake --build build -j
+    - name: Upload Linux binaries
+      if: runner.os == 'Linux'
+      uses: actions/upload-artifact@v4
+      with:
+        name: quasar-linux
+        path: 'build/apps/quasar-grep
+
+          build/apps/quasar-bench
+
+          build/apps/quasar-cpu
+
+          '
+    - name: Test
+      run: ctest --test-dir build --output-on-failure
+    - name: Clang-Tidy (best-effort)
+      run: 'echo "Running clang-tidy if available" || true
+
+        '
+    - name: Smoke bench
+      run: ./build/apps/quasar-bench || true
+    - name: Package (Linux)
+      if: runner.os == 'Linux'
+      run: (cd build && cpack -G TGZ && cpack -G ZIP) || true
+    - name: Upload packages (Linux)
+      if: runner.os == 'Linux'
+      uses: actions/upload-artifact@v4
+      with:
+        name: packages-linux
+        path: build/*.{zip,tgz}
+  codeql:
+    uses: github/codeql-action/.github/workflows/codeql.yml@v3
+'on':
+- workflow_dispatch

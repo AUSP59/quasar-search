@@ -1,0 +1,12 @@
+# bash completion for quasar-grep
+_quasar_grep() {
+  local cur prev
+  COMPREPLY=()
+  cur="${COMP_WORDS[COMP_CWORD]}"
+  prev="${COMP_WORDS[COMP_CWORD-1]}"
+  case "${prev}" in
+    --json|--count|-h|--help) ;;
+  esac
+  COMPREPLY=( $(compgen -W "--count --json -h --help" -- ${cur}) )
+}
+complete -F _quasar_grep quasar-grep

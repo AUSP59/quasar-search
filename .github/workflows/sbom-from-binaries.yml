@@ -1,0 +1,24 @@
+name: sbom-from-binaries
+true:
+- push
+- pull_request
+jobs:
+  sbom:
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build Release
+      run: 'cmake -S . -B build -D CMAKE_BUILD_TYPE=Release
+
+        cmake --build build -j || true
+
+        '
+    - uses: anchore/sbom-action@v0
+      with:
+        path: build
+        artifact-name: sbom-binaries
+        upload-artifact: true
+        format: cyclonedx-json
+'on':
+- workflow_dispatch

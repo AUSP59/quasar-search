@@ -1,0 +1,22 @@
+name: schema-validate
+true:
+- push
+- pull_request
+jobs:
+  schema:
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup Python deps
+      run: pip3 install jsonschema
+    - name: Configure/Build
+      run: 'cmake -S . -B build -D CMAKE_BUILD_TYPE=Release -D QUASAR_ENABLE_TESTS=ON
+
+        cmake --build build -j
+
+        '
+    - name: Run schema validation
+      run: python3 tests/test_schema_validate.py build/apps/quasar-grep
+'on':
+- workflow_dispatch

@@ -1,0 +1,107 @@
+// SPDX-License-Identifier: Apache-2.0
+
+repos:
+  - repo: https://github.com/zricethezav/gitleaks
+    rev: v8.18.4
+    hooks: [{ id: gitleaks, args: [ "detect", "--no-git" ] }]
+  - repo: https://github.com/trufflesecurity/trufflehog
+    rev: v3.78.4
+    hooks: [{ id: trufflehog-file }]
+
+
+  - repo: https://github.com/codespell-project/codespell
+    rev: v2.3.0
+    hooks:
+      - id: codespell
+        args: ["-L", "quasar"]
+
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.10.0.1
+    hooks:
+      - id: shellcheck
+
+  - repo: local
+    hooks:
+      - id: clang-tidy-run
+        name: clang-tidy-run
+        entry: bash -lc 'git ls-files "*.{c,cc,cxx,cpp,h,hpp,ixx}" | xargs -r clang-tidy --'
+        language: system
+        pass_filenames: false
+
+  - repo: local
+    hooks:
+      - id: forbid-bad-c-apis
+        name: forbid-bad-c-apis
+        entry: bash -lc 'if git ls-files "*.{c,cc,cxx,cpp,h,hpp}" | xargs -r grep -nE "(\bgets\b|\bstrcpy\b|\bstrcat\b)"; then echo "Forbidden C APIs found"; exit 1; fi'
+        language: system
+        pass_filenames: false
+
+  - repo: https://github.com/adrienverge/yamllint
+    rev: v1.35.1
+    hooks:
+      - id: yamllint
+        files: "\.(yml|yaml)$"
+
+  - repo: local
+    hooks:
+      - id: jsonschema-validate
+        name: jsonschema-validate
+        entry: bash -lc 'if command -v python3 >/dev/null; then python3 - <<PY
+import jsonschema, json, os, glob
+for f in glob.glob("schemas/*.json"): jsonschema.Draft7Validator.check_schema(json.load(open(f)))
+print("schemas OK")
+PY
+; else echo "skip"; fi'
+        language: system
+        files: "^schemas/.*\.json$"
+
+  - repo: local
+    hooks:
+      - id: spdx-header-check
+        name: spdx-header-check
+        entry: bash -lc 'python3 - <<PY
+import sys,glob
+ok=True
+for f in glob.glob("**/*", recursive=True):
+  if any(f.endswith(ext) for ext in [".c",".cc",".cxx",".cpp",".h",".hpp",".ixx",".cmake",".sh",".py",".yml",".yaml",".json",".toml"]):
+    try:
+      head=open(f,encoding="utf-8",errors="ignore").read().splitlines()[:5]
+    except Exception:
+      continue
+    if not any("SPDX-License-Identifier:" in line for line in head):
+      print("Missing SPDX header:", f)
+      ok=False
+if not ok:
+  sys.exit(1)
+print("SPDX headers OK")
+PY'
+        language: system
+        pass_filenames: false
+
+- repo: https://github.com/cheshirekow/cmake-format-precommit
+  rev: v0.6.13
+  hooks:
+    - id: cmake-format
+      files: "(CMakeLists\.txt|.*\.cmake)$"
+
+- repo: https://github.com/igorshubovych/markdownlint-cli
+  rev: v0.41.0
+  hooks:
+    - id: markdownlint
+      args: ["--disable", "MD013"]
+
+- repo: https://github.com/adrienverge/yamllint
+  rev: v1.35.1
+  hooks:
+    - id: yamllint
+
+- repo: https://github.com/shellcheck-py/shellcheck-py
+  rev: v0.10.0.1
+  hooks:
+    - id: shellcheck
+
+- repo: https://github.com/python-jsonschema/check-jsonschema
+  rev: 0.28.6
+  hooks:
+    - id: check-jsonschema
+      files: "\.json$|\.jsonc$"

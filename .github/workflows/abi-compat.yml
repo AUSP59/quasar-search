@@ -1,0 +1,42 @@
+name: abi-compat
+true:
+- push
+- pull_request
+jobs:
+  abi:
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - name: Install tools
+      run: sudo apt-get update && sudo apt-get install -y abi-dumper abi-compliance-checker
+    - name: Build shared lib
+      run: 'cmake -S . -B build -D CMAKE_BUILD_TYPE=Release
+
+        cmake --build build -j
+
+        if [ -f build/libquasar.so ]; then echo "Found shared lib"; fi
+
+        '
+    - name: Dump ABI (current)
+      run: "if [ -f build/libquasar.so ]; then\n  abi-dumper build/libquasar.so -o\
+        \ quasar-current.abi -lver current || true\nelse\n  echo \"Shared library\
+        \ not found; skipping dump\"\nfi\n"
+    - name: Try compare with previous (best-effort)
+      run: "if [ -f quasar-current.abi ] && [ -f quasar-base.abi ]; then\n  abi-compliance-checker\
+        \ -l quasar -old quasar-base.abi -new quasar-current.abi || true\nelse\n \
+        \ echo \"No base ABI; provide quasar-base.abi in repo or artifacts for strict\
+        \ check.\"\nfi\n"
+    - uses: actions/upload-artifact@v4
+      with:
+        name: abi-artifacts-${{ github.sha }}
+        path: 'quasar-current.abi
+
+          compat_reports
+
+          '
+        if-no-files-found: ignore
+'on':
+- workflow_dispatch

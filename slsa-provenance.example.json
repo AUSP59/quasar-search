@@ -1,0 +1,18 @@
+// SPDX-License-Identifier: Apache-2.0
+{
+  "_note": "Example SLSA-like provenance statement; replace with actual GitHub provenance.",
+  "predicateType": "https://slsa.dev/provenance/v0.2",
+  "buildType": "https://github.com/actions/runner",
+  "builder": {
+    "id": "https://github.com/actions/runner"
+  },
+  "invocation": {
+    "parameters": {
+      "CMAKE_BUILD_TYPE": "Release"
+    },
+    "environment": {
+      "os": "ubuntu-latest"
+    }
+  },
+  "materials": []
+}

@@ -1,0 +1,22 @@
+name: cli-bats
+true:
+- push
+- pull_request
+jobs:
+  bats:
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install bats
+      run: sudo apt-get update && sudo apt-get install -y bats
+    - name: Build binary
+      run: 'cmake -S . -B build -D CMAKE_BUILD_TYPE=Release
+
+        cmake --build build -j
+
+        '
+    - name: Run bats tests
+      run: BINARY=build/apps/quasar-grep bats tests/cli
+'on':
+- workflow_dispatch

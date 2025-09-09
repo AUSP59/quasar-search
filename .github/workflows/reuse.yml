@@ -1,0 +1,13 @@
+name: reuse
+true:
+- push
+- pull_request
+jobs:
+  lint:
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: fsfe/reuse-action@v2
+'on':
+- workflow_dispatch

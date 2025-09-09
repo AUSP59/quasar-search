@@ -1,0 +1,19 @@
+name: bazel
+true:
+- push
+- pull_request
+jobs:
+  build:
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: bazelbuild/setup-bazelisk@v3
+    - name: Build (best-effort)
+      run: 'bazelisk build //:quasar || true
+
+        bazelisk build //:quasar-grep || true
+
+        '
+'on':
+- workflow_dispatch

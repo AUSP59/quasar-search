@@ -1,0 +1,13 @@
+# syntax=docker/dockerfile:1
+FROM ubuntu:22.04 AS build
+RUN apt-get update && apt-get install -y --no-install-recommends build-essential cmake ninja-build && rm -rf /var/lib/apt/lists/*
+WORKDIR /src
+COPY . .
+RUN cmake -S . -B build -G Ninja -D CMAKE_BUILD_TYPE=Release && cmake --build build -j
+
+FROM gcr.io/distroless/cc
+COPY --from=build /src/build/apps/quasar-grep /usr/local/bin/quasar-grep
+COPY --from=build /src/build/apps/quasar-ls /usr/local/bin/quasar-ls
+COPY --from=build /src/build/apps/quasar-bench /usr/local/bin/quasar-bench
+COPY --from=build /src/build/apps/quasar-cpu /usr/local/bin/quasar-cpu
+ENTRYPOINT ["/usr/local/bin/quasar-grep"]

@@ -1,0 +1,24 @@
+name: trivy-image
+true:
+- push
+- pull_request
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  image-scan:
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build image
+      run: docker build -f container/Dockerfile.release -t quasar:test .
+    - name: Trivy image scan
+      uses: aquasecurity/trivy-action@0.20.0
+      with:
+        scan-type: image
+        image-ref: quasar:test
+        ignore-unfixed: true
+        format: table
+'on':
+- workflow_dispatch

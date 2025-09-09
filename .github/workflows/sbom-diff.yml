@@ -1,0 +1,33 @@
+name: sbom-diff
+true:
+- pull_request
+jobs:
+  diff:
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - name: Generate base SBOM (main)
+      run: 'git fetch origin main --depth=1 || true
+
+        mkdir -p sbom
+
+        echo "{}" > sbom/base.json
+
+        '
+    - name: Generate new SBOM
+      uses: anchore/sbom-action@v0
+      with:
+        path: .
+        artifact-name: sbom-pr
+        upload-artifact: false
+        format: cyclonedx-json
+    - name: Compare
+      run: 'python3 scripts/sbom/diff.py sbom/base.json ./sbom-pr.cyclonedx.json ||
+        true
+
+        '
+'on':
+- workflow_dispatch

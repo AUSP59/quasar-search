@@ -1,0 +1,35 @@
+name: windows-mingw
+true:
+- push
+- pull_request
+jobs:
+  build:
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install mingw-w64
+      run: sudo apt-get update && sudo apt-get install -y mingw-w64 cmake ninja-build
+        zip
+    - name: Configure (x86_64-w64-mingw32)
+      run: 'cmake -S . -B build-mingw -G Ninja             -D CMAKE_SYSTEM_NAME=Windows             -D
+        CMAKE_C_COMPILER=x86_64-w64-mingw32-gcc             -D CMAKE_CXX_COMPILER=x86_64-w64-mingw32-g++             -D
+        CMAKE_BUILD_TYPE=Release
+
+        '
+    - name: Build
+      run: cmake --build build-mingw -j
+    - name: Package
+      run: 'mkdir -p out
+
+        cp -r build-mingw/* out/ || true
+
+        (cd out && zip -r ../quasar-apex-win64.zip .)
+
+        '
+    - uses: actions/upload-artifact@v4
+      with:
+        name: quasar-apex-win64-mingw
+        path: quasar-apex-win64.zip
+'on':
+- workflow_dispatch

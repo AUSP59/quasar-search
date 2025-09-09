@@ -1,0 +1,37 @@
+name: docs-qa
+true:
+- push
+- pull_request
+jobs:
+  markdownlint:
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: DavidAnson/markdownlint-cli2-action@v17
+      with:
+        globs: '**/*.md
+
+          '
+  linkcheck:
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: lycheeverse/lychee-action@v1
+      with:
+        args: --no-progress --exclude-mail --accept 200,999 --verbose .
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  vale:
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: errata-ai/vale-action@reviewdog
+      with:
+        files: docs/ README.md
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+'on':
+- workflow_dispatch

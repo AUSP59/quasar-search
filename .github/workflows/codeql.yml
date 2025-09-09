@@ -1,0 +1,16 @@
+name: CodeQL
+true:
+  push: null
+  pull_request: null
+  schedule:
+  - cron: 0 3 * * 0
+permissions:
+  contents: read
+  security-events: write
+jobs:
+  analyze:
+    uses: github/codeql-action/.github/workflows/codeql-analysis.yml@v3
+    with:
+      languages: cpp
+'on':
+- workflow_dispatch

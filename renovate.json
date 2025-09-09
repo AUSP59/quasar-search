@@ -1,0 +1,24 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "packageRules": [
+    {
+      "matchManagers": ["github-actions"],
+      "groupName": "github-actions"
+    }
+  ],
+  "regexManagers": [
+    {
+      "fileMatch": ["^CMakeLists\.txt$", "^bench/CMakeLists\.txt$"],
+      "matchStrings": ["GIT_TAG v(?<currentValue>\d+\.\d+\.\d+)"],
+      "depNameTemplate": "google/benchmark",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": ["^vcpkg-port/vcpkg\.json$"],
+      "matchStrings": ["\"version\"\s*:\s*\"(?<currentValue>[^\"]+)\""],
+      "depNameTemplate": "vcpkg-port",
+      "datasourceTemplate": "custom"
+    }
+  ]
+}
