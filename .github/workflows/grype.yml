@@ -9,7 +9,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Anchore Grype scan (filesystem)
-      uses: anchore/scan-action@v4
+      uses: anchore/scan-action@v7
       with:
         path: .
       continue-on-error: true
